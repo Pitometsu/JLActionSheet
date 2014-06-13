@@ -95,6 +95,23 @@
             
             _cancelTextColor        = _textColor;
             _cancelTextShadowColor  = _textShadowColor;
+            
+        } else if (style == JLSTYLE_MULTIFON) {
+            
+            _standardBGColor        = [UIColor whiteColor];
+            _highlightedBGColor     = Color(204., 204., 204., 1.);
+            
+            _cancelBGColor          = Color(240., 240., 240., 1.);
+            _cancelHighlightedBG    = Color(200., 200., 200., 1.);
+            
+            _darkBorderColor        = Color(0, 0, 0, .2);
+            _lightBorderColor       = Color(255, 255, 255, .2);
+            
+            _textColor              = Color(40, 40, 40, 1.0);
+            _textShadowColor        = Color(220, 220, 220, .75);
+            
+            _cancelTextColor        = Color(68., 38., 107., 1.);
+            _cancelTextShadowColor  = [UIColor clearColor];
         }
     }
     

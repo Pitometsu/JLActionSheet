@@ -12,7 +12,9 @@ typedef enum JLStyle {
     JLSTYLE_STEEL,
     JLSTYLE_SUPERCLEAN,
     JLSTYLE_CLEANBLUE,
-    JLSTYLE_FERRARI
+    JLSTYLE_FERRARI,
+    
+    JLSTYLE_MULTIFON
 } JLStyle;
 
 @interface JLActionSheetStyle : NSObject

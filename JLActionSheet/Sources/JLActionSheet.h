@@ -31,6 +31,16 @@ typedef void(^JLActionBlock)(JLActionSheet* actionSheet, NSInteger buttonIndex);
 // UI Objects
 @property JLStyle style;
 
+
+//pt
+
+@property (nonatomic, strong) UIFont *titleFont;
+@property (nonatomic, strong) UIColor *titleColor;
+@property (nonatomic, strong) UIFont *buttonFont;
+@property (nonatomic, strong) UIColor *cancelButtonTitleColor;
+
+//
+
 /// Initialization Methods
 + (id) sheetWithTitle:(NSString*) title delegate:(id<JLActionSheetDelegate>) delegate cancelButtonTitle:(NSString*) cancelTitle otherButtonTitles:(NSArray*) buttonTitles;
 - (id) initWithTitle:(NSString*) title delegate:(id<JLActionSheetDelegate>) delegate cancelButtonTitle:(NSString*) cancelTitle otherButtonTitles:(NSArray*) buttonTitles;

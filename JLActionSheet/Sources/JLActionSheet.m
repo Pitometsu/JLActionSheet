@@ -24,6 +24,10 @@
 /// Display Containers
 @property (nonatomic, strong) UIPopoverController* popoverController;
 
+
+//pt
+@property (nonatomic, strong) JLActionSheetStyle *currentStlye;
+
 @end
 
 @implementation JLActionSheet
@@ -61,7 +65,7 @@ const NSInteger tapBGViewTag         = 4292;
         _buttonTitles = tempTitles;
         
         [self setBackgroundColor:[UIColor clearColor]];
-        [self setStyle:kDefaultStyle];
+        [self setStyle:JLSTYLE_MULTIFON];
         [self setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight)];
         [self setAutoresizesSubviews:YES];
         
@@ -92,7 +96,7 @@ const NSInteger tapBGViewTag         = 4292;
 - (UIView*) layoutButtonsWithTitle:(BOOL) allowTitle
 {
     CGFloat titleOffset                 = (_title == nil || !allowTitle) ? 0 : 20;
-    JLActionSheetStyle* currentStlye    = [[JLActionSheetStyle alloc] initWithStyle:_style];
+    self.currentStlye                   = [[JLActionSheetStyle alloc] initWithStyle:_style];
     CGFloat buttonHeight                = kActionButtonHeight;
     NSInteger buttonCount               = _cancelTitle ? (_buttonTitles.count + 1) : _buttonTitles.count;
     CGFloat parentViewHeight            = ((buttonHeight * buttonCount) + titleOffset);
@@ -102,9 +106,12 @@ const NSInteger tapBGViewTag         = 4292;
     
     if (_cancelTitle)
     {
-        JLActionButton* cancelButton    = [JLActionButton buttonWithStyle:currentStlye andTitle:_cancelTitle isCancel:YES];
+        JLActionButton* cancelButton    = [JLActionButton buttonWithStyle:self.currentStlye andTitle:_cancelTitle isCancel:YES];
         cancelButton.tag                = currentButtonTag++;
         _cancelButtonIndex              = cancelButton.tag;
+        
+        [cancelButton.titleLabel setFont:[self buttonFont]];
+        [cancelButton setTitleColor:[self cancelButtonTitleColor] forState:UIControlStateNormal];
         
         [cancelButton addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [cancelButton setFrame:CGRectMake(0, currentButtonTop, CGRectGetWidth(buttonParentView.bounds), buttonHeight)];
@@ -115,8 +122,11 @@ const NSInteger tapBGViewTag         = 4292;
     
     for (NSString* currentButtonTitle in _buttonTitles)
     {
-        JLActionButton* currentActionButton = [JLActionButton buttonWithStyle:currentStlye andTitle:currentButtonTitle isCancel:NO];
+        JLActionButton* currentActionButton = [JLActionButton buttonWithStyle:self.currentStlye andTitle:currentButtonTitle isCancel:NO];
         currentActionButton.tag             = currentButtonTag++;
+        
+        [currentActionButton.titleLabel setFont:[self buttonFont]];
+        [currentActionButton setTitleColor:[self cancelButtonTitleColor] forState:UIControlStateNormal];
         
         [currentActionButton addTarget:self action:@selector(buttonClicked:) forControlEvents:UIControlEventTouchUpInside];
         [currentActionButton setFrame:CGRectMake(0, currentButtonTop, CGRectGetWidth(buttonParentView.bounds), buttonHeight)];
@@ -128,16 +138,16 @@ const NSInteger tapBGViewTag         = 4292;
     // Handle creating the title object if there is a title provided
     if (_title.length > 0 && allowTitle)
     {
-        [buttonParentView setBackgroundColor:[currentStlye getBGColorHighlighted:NO]];
+        [buttonParentView setBackgroundColor:[self.currentStlye getBGColorHighlighted:NO]];
         [((JLActionButton*)[buttonParentView.subviews lastObject]) configureForTitle];
         
         UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(buttonParentView.bounds), titleOffset)];        
         [titleLabel setAutoresizingMask:(UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin)];
         [titleLabel setBackgroundColor:[UIColor clearColor]];
-        [titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
-        [titleLabel setTextColor:[currentStlye getTextColor:NO]];
+        [titleLabel setFont:[self titleFont]];
+        [titleLabel setTextColor:[self titleColor]];
         [titleLabel setShadowOffset:CGSizeMake(0, -1.0)];
-        [titleLabel setShadowColor:[currentStlye getTextShadowColor:NO]];
+        [titleLabel setShadowColor:[self.currentStlye getTextShadowColor:NO]];
         [titleLabel setTextAlignment:NSTextAlignmentCenter];
         [titleLabel setText:_title];
         
@@ -372,6 +382,29 @@ const NSInteger tapBGViewTag         = 4292;
 - (void) setDidDismissBlock:(JLActionBlock)actionBlock
 {
     didDismissBlock = actionBlock;
+}
+
+
+#pragma mark - Font accessors
+
+- (UIFont *)titleFont
+{
+    return _titleFont ? _titleFont : [UIFont systemFontOfSize:14.];
+}
+
+- (UIColor *)titleColor
+{
+    return _titleColor ? _titleColor : [self.currentStlye getTextColor:NO];
+}
+
+- (UIFont *)buttonFont
+{
+    return _buttonFont ? _buttonFont : [UIFont systemFontOfSize:20.];
+}
+
+- (UIColor *)cancelButtonTitleColor
+{
+    return _cancelButtonTitleColor ? _cancelButtonTitleColor : [self.currentStlye getCancelBGColorHighlighted:NO];
 }
 
 @end
