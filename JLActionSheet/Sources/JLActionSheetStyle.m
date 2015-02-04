@@ -8,6 +8,20 @@
 
 #import "JLActionSheetStyle.h"
 
+
+UIColor *Color(CGFloat r,
+               CGFloat g,
+               CGFloat b,
+               CGFloat a
+               ) {
+    return
+    [UIColor colorWithRed:(r / 255.f)
+                    green:(g / 255.f)
+                     blue:(b / 255.f)
+                    alpha:a];
+}
+
+
 @interface JLActionSheetStyle ()
 
 @property (nonatomic, strong) UIColor* standardBGColor;
@@ -15,7 +29,6 @@
 
 @property (nonatomic, strong) UIColor* cancelBGColor;
 @property (nonatomic, strong) UIColor* cancelHighlightedBG;
-
 
 /// Font Colors
 @property (nonatomic, strong) UIColor* textColor;
@@ -25,9 +38,20 @@
 
 @end
 
+
 @implementation JLActionSheetStyle
 
-#define Color(r,g,b,a) [UIColor colorWithRed:(r/(float)255) green:(g/(float)255) blue:(b/(float)255) alpha:a]
+// Assumes input like "00FF00" (RRGGBB).
++ (UIColor *)colorFromHexString:(NSString *)hexString
+{
+    unsigned rgbValue = 0;
+    NSScanner *scanner = [NSScanner scannerWithString:hexString];
+    [scanner scanHexInt:&rgbValue];
+    return [UIColor colorWithRed:((CGFloat)((rgbValue & 0xFF0000) >> 16)) / 255.f
+                           green:((CGFloat)((rgbValue & 0x00FF00) >>  8)) / 255.f
+                            blue:((CGFloat)((rgbValue & 0x0000FF) >>  0)) / 255.f
+                           alpha:1.f];
+}
 
 - (id) initWithStyle:(JLStyle)style
 {
@@ -118,7 +142,41 @@
     return self;
 }
 
-#pragma mark - 
+- (instancetype) initWithBackgroundColor:(UIColor *)backgroundColor
+              highlightedBackgroundColor:(UIColor *)highlightedBackgroundColor
+                   cancelBackgroundColor:(UIColor *)cancelBackgroundColor
+        cancelHighlightedBackgroundColor:(UIColor *)cancelHighlightedBackgroundColor
+                         darkBorderColor:(UIColor *)darkBorderColor
+                        lightBorderColor:(UIColor *)lightBorderColor
+                               textColor:(UIColor *)textColor
+                         textShadowColor:(UIColor *)textShadowColor
+                         cancelTextColor:(UIColor *)cancelTextColor
+                   cancelTextShadowColor:(UIColor *)cancelTextShadowColor
+{
+    self = [super init];
+
+    if (!self) {
+        return nil;
+    }
+    self->_standardBGColor        = backgroundColor;
+    self->_highlightedBGColor     = highlightedBackgroundColor;
+    
+    self->_cancelBGColor          = cancelBackgroundColor;
+    self->_cancelHighlightedBG    = cancelHighlightedBackgroundColor;
+    
+    // Set the border colors
+    self->_darkBorderColor        = darkBorderColor;
+    self->_lightBorderColor       = lightBorderColor;
+    
+    self->_textColor              = textColor;
+    self->_textShadowColor        = textShadowColor;
+    
+    self->_cancelTextColor        = cancelTextColor;
+    self->_cancelTextShadowColor  = cancelTextShadowColor;
+
+    return self;
+}
+
 #pragma mark - Style UIColor Accessor Methods
 
 

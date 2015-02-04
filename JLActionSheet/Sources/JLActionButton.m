@@ -29,7 +29,9 @@
 #pragma mark -
 #pragma mark - Inititalization Methods
 
-+ (id) buttonWithStyle:(JLActionSheetStyle*)style andTitle:(NSString *)buttonTitle isCancel:(BOOL) isCancel
++ (instancetype)buttonWithStyle:(JLActionSheetStyle*)style
+                          title:(NSString *)buttonTitle
+                       isCancel:(BOOL) isCancel
 {
     JLActionButton* actionButton = [JLActionButton buttonWithType:UIButtonTypeCustom];
     [actionButton setTitle:buttonTitle forState:UIControlStateNormal];
@@ -66,29 +68,25 @@
     return actionButton;
 }
 
-#pragma mark -
 #pragma mark - UI Methods
 
 - (void) layoutSubviews
 {
     [super layoutSubviews];
-    [_topBorder setFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), 1)];
-    [_bottomBorder setFrame:CGRectMake(0, CGRectGetHeight(self.bounds) - 1, CGRectGetWidth(self.bounds), 1)];
+    self.topBorder.frame = CGRectMake(0, 0, CGRectGetWidth(self.bounds), 1);
+    self.bottomBorder.frame = CGRectMake(0, CGRectGetHeight(self.bounds) - 1,
+                                         CGRectGetWidth(self.bounds), 1);
 }
 
-
-- (void) setHighlighted:(BOOL)highlighted
+- (void)setHighlighted:(BOOL)highlighted
 {
-    if (highlighted)
-        [self setBackgroundColor:_highlightedColor];
-    else
-        [self setBackgroundColor:_bgColor];
+    [self setBackgroundColor: highlighted ? self.highlightedColor : self.bgColor];
 }
 
 /*
  Responsible for configuring the top action button with respect to Y placement when there is a title above it
  */
-- (void) configureForTitle
+- (void)configureForTitle
 {
     [_topBorder setHidden:YES];
 }

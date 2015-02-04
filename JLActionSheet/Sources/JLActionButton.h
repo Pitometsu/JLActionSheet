@@ -10,8 +10,10 @@
 
 @interface JLActionButton : UIButton
 
-+ (id) buttonWithStyle:(JLActionSheetStyle*)style andTitle:(NSString *)buttonTitle isCancel:(BOOL) isCancel;
++ (instancetype)buttonWithStyle:(JLActionSheetStyle*)style
+                          title:(NSString *)buttonTitle
+                       isCancel:(BOOL) isCancel;
 
-- (void) configureForTitle;
+- (void)configureForTitle;
 
 @end
